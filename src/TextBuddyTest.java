@@ -25,6 +25,13 @@ public class TextBuddyTest {
         System.setOut(null);
         System.setErr(null);
     }
+    @Test
+    public void commandObjectAddTest(){
+        String message = "Add ten pies";
+        TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
+        assertEquals("Add", cmdObj.getCommand());
+        assertEquals("ten pies", cmdObj.getParameters());        
+    }
     
     @Test
     public void printMessageTest(){
