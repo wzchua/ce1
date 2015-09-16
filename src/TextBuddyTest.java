@@ -25,6 +25,45 @@ public class TextBuddyTest {
     public void cleanUpStreams() {
         System.setOut(null);
     }
+
+    public String initializeDummyFile(String[] dataLines) {
+        Random rng = new Random();
+        String fileName ="test" + rng.nextInt() + ".txt";
+        File file;
+        try {
+            file = new File(fileName);
+            while(file.exists()){
+                fileName ="test" + rng.nextInt() + ".txt";
+                file = new File(fileName);
+            }
+            file.createNewFile();
+        
+            FileWriter fw = new FileWriter(fileName);
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            for (String line : dataLines) {
+                bw.write(line);
+                bw.newLine();
+            }
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return fileName;
+    }
+    
+    public void deleteDummyFile(String fileName){
+        File file;
+        //cleaning the test file
+        try {
+            file = new File(fileName);
+            file.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
     
     @Test
     public void commandObjectNoParameterTest(){
@@ -82,45 +121,6 @@ public class TextBuddyTest {
    
        deleteDummyFile(fileName);
     }
-
-    public String initializeDummyFile(String[] dataLines) {
-        Random rng = new Random();
-        String fileName ="test" + rng.nextInt() + ".txt";
-        File file;
-        try {
-            file = new File(fileName);
-            while(file.exists()){
-                fileName ="test" + rng.nextInt() + ".txt";
-                file = new File(fileName);
-            }
-            file.createNewFile();
-        
-            FileWriter fw = new FileWriter(fileName);
-            BufferedWriter bw = new BufferedWriter(fw);
-            
-            for (String line : dataLines) {
-                bw.write(line);
-                bw.newLine();
-            }
-            bw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        return fileName;
-    }
-    
-    public void deleteDummyFile(String fileName){
-        File file;
-        //cleaning the test file
-        try {
-            file = new File(fileName);
-            file.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
     
     @Test
     public void displayEntriesTest(){
@@ -129,6 +129,19 @@ public class TextBuddyTest {
         
         TextBuddy textBuddy = new TextBuddy(fileName);
         assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.displayEntries());
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processDisplayCommandTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        TextBuddy.CommandObject testCommmand1 = new TextBuddy.CommandObject("Display");
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        
+        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.processDisplayCommand(testCommmand1));
         
         deleteDummyFile(fileName);
     }
