@@ -34,12 +34,13 @@ public class TextBuddyTest {
     }
     
     @Test
-    public void commandObjectAddTest(){
+    public void commandObjectWithStringParameter(){
         String message = "Add ten pies";
         TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
         assertEquals("Add", cmdObj.getCommand());
         assertEquals("ten pies", cmdObj.getParameters());
         assertTrue(cmdObj.hasParameters());
+        assertFalse(cmdObj.processParameterAsInteger());
     }
     
     @Test
