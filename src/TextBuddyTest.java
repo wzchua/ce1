@@ -30,7 +30,6 @@ public class TextBuddyTest {
         assertEquals(message, cmdObj.getCommand());
         assertFalse(cmdObj.hasParameters());
         assertEquals(null, cmdObj.getParameters());
-        
     }
     
     @Test
@@ -38,9 +37,20 @@ public class TextBuddyTest {
         String message = "Add ten pies";
         TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
         assertEquals("Add", cmdObj.getCommand());
-        assertEquals("ten pies", cmdObj.getParameters());
         assertTrue(cmdObj.hasParameters());
+        assertEquals("ten pies", cmdObj.getParameters());
         assertFalse(cmdObj.processParameterAsInteger());
+    }
+    
+    @Test
+    public void commandObjectWithIntegerParameter(){
+        String message = "Delete 1000";
+        TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
+        assertEquals("Delete", cmdObj.getCommand());
+        assertTrue(cmdObj.hasParameters());
+        assertEquals("1000", cmdObj.getParameters());
+        assertTrue(cmdObj.processParameterAsInteger());
+        assertEquals(1000, cmdObj.getParameterAsInteger());
     }
     
     @Test
