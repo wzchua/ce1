@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.junit.After;
@@ -177,6 +178,42 @@ public class TextBuddyTest {
         assertEquals(invalidCommandOutput, textBuddy.processDisplayCommand(invalidDisplayCommand));
         textBuddy.clearEntries();
         assertEquals(fileName + " is empty", textBuddy.processDisplayCommand(validDisplayCommand));
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void deleteEntryTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertEquals(deleteOutput, textBuddy.deleteEntry(1));
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processDeleteCommandTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
+        TextBuddy.CommandObject validDeleteCommand = new TextBuddy.CommandObject("Delete 2");
+        TextBuddy.CommandObject invalidDeleteCommand1  = new TextBuddy.CommandObject("Delete");
+        TextBuddy.CommandObject invalidDeleteCommand2  = new TextBuddy.CommandObject("Delete 10");
+        String invalidCommandOutput = "Invalid command parameter";
+        String invalidIndexOutput = "Invalid index";
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        String[] dataAfterDelete = {"test"};
+        
+        assertArrayEquals(testData, textBuddy.getDatalines().toArray());
+        assertEquals(deleteOutput, textBuddy.processDeleteCommand(validDeleteCommand));
+        assertArrayEquals(dataAfterDelete, textBuddy.getDatalines().toArray());
+        
+        assertEquals(invalidCommandOutput, textBuddy.processDeleteCommand(invalidDeleteCommand1));
+        assertEquals(invalidIndexOutput, textBuddy.processDeleteCommand(invalidDeleteCommand2));
         
         deleteDummyFile(fileName);
     }

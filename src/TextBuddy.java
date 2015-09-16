@@ -188,6 +188,9 @@ public class TextBuddy {
         String input = _scanner.nextLine();
         return input;
     }
+    ArrayList<String> getDatalines(){
+        return _dataLines;
+    }
 
     private void processInput(String input) {
         CommandObject cmd = new CommandObject(input);
@@ -200,7 +203,7 @@ public class TextBuddy {
                 processAddCommand(cmd);
                 break;
             case COMMAND_DELETE :
-                processDeleteCommand(cmd);
+                printMessage(processDeleteCommand(cmd));
                 break;
             case COMMAND_CLEAR :
                 printMessage(processClearCommand(cmd));
@@ -229,12 +232,12 @@ public class TextBuddy {
         }
     }
 
-    private void processDeleteCommand(CommandObject cmd) {
+    String processDeleteCommand(CommandObject cmd) {
         if (cmd.hasParameters() && cmd.processParameterAsInteger()) {
             int index = cmd.getParameterAsInteger() - 1;
-            deleteEntry(index);
+            return deleteEntry(index);
         } else {
-            printMessage(INVALID_COMMAND_PARAMETER_MSG);
+            return INVALID_COMMAND_PARAMETER_MSG;
         }
     }
 
@@ -251,12 +254,12 @@ public class TextBuddy {
         printMessage(String.format(ADD_ENTRY_MSG, _fileName, dataLine));
     }
 
-    private void deleteEntry(int lineIndex) {
+    String deleteEntry(int lineIndex) {
         if (lineIndex < 0 || lineIndex >= _dataLines.size()) {
-            printMessage(INVALID_INDEX_MSG);
+            return INVALID_INDEX_MSG;
         } else {
             String lineDeleted = _dataLines.remove(lineIndex);
-            printMessage(String.format(DELETE_ENTRY_MSG, _fileName, lineDeleted));
+            return String.format(DELETE_ENTRY_MSG, _fileName, lineDeleted);
         }
     }
 
