@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class TextBuddyTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
+    
     @Before
     public void setUpStreams() {
         System.setOut(new PrintStream(outContent));

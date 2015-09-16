@@ -213,11 +213,11 @@ public class TextBuddy {
         }
     }
 
-    private void processDisplayCommand(CommandObject cmd) {
+    private String processDisplayCommand(CommandObject cmd) {
         if (cmd.hasParameters()) {
-            printMessage(INVALID_COMMAND_PARAMETER_MSG);            
+            return INVALID_COMMAND_PARAMETER_MSG;            
         } else {
-            displayEntries();
+            return displayEntries();
         }
     }
 
@@ -265,14 +265,23 @@ public class TextBuddy {
         printMessage(String.format(CLEAR_ENTRIES_MSG, _fileName));
     }
 
-    private void displayEntries() {
+    private String displayEntries() {
         int length = _dataLines.size();
+        String output;
+        StringBuilder stringBuilder = new StringBuilder();
         if (length == 0) {
-            printMessage(String.format(NO_ENTRIES_MSG, _fileName));
+            output = String.format(NO_ENTRIES_MSG, _fileName);
+        } else {
+            for (int i = 0; i < length; i++) {
+                stringBuilder.append(formatDataLine(i, _dataLines.get(i)));
+
+                if(i != length - 1){
+                    stringBuilder.append(System.lineSeparator());
+                }
+            }
+            output = stringBuilder.toString();
         }
-        for (int i = 0; i < length; i++) {
-            printMessage(formatDataLine(i, _dataLines.get(i)));
-        }
+        return output;
     }
 
     private String formatDataLine(int index, String dataLine) {        
