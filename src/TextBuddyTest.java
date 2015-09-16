@@ -123,33 +123,6 @@ public class TextBuddyTest {
     }
     
     @Test
-    public void displayEntriesTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.displayEntries());
-        
-        deleteDummyFile(fileName);
-    }
-    
-    @Test
-    public void processDisplayCommandTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        TextBuddy.CommandObject testCommmand1 = new TextBuddy.CommandObject("Display");
-        TextBuddy.CommandObject invalidClearCommand  = new TextBuddy.CommandObject("Display 5");
-        String invalidCommandOutput = "Invalid command parameter";
-        
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        
-        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.processDisplayCommand(testCommmand1));
-        assertEquals(invalidCommandOutput, textBuddy.processDisplayCommand(invalidClearCommand));
-        
-        deleteDummyFile(fileName);
-    }
-    
-    @Test
     public void clearEntriesTest(){
         String[] testData = {"test", "test2"};
         String fileName = initializeDummyFile(testData);
@@ -173,6 +146,37 @@ public class TextBuddyTest {
         TextBuddy textBuddy = new TextBuddy(fileName);
         assertEquals(clearOutput, textBuddy.processClearCommand(validClearCommmand));
         assertEquals(invalidCommandOutput, textBuddy.processClearCommand(invalidClearCommand));
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void displayEntriesTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.displayEntries());
+        textBuddy.clearEntries();
+        assertEquals(fileName + " is empty", textBuddy.displayEntries());
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processDisplayCommandTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        TextBuddy.CommandObject validDisplayCommand = new TextBuddy.CommandObject("Display");
+        TextBuddy.CommandObject invalidDisplayCommand  = new TextBuddy.CommandObject("Display 5");
+        String invalidCommandOutput = "Invalid command parameter";
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        
+        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.processDisplayCommand(validDisplayCommand));
+        assertEquals(invalidCommandOutput, textBuddy.processDisplayCommand(invalidDisplayCommand));
+        textBuddy.clearEntries();
+        assertEquals(fileName + " is empty", textBuddy.processDisplayCommand(validDisplayCommand));
         
         deleteDummyFile(fileName);
     }
