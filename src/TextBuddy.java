@@ -52,12 +52,12 @@ public class TextBuddy {
      * @author Wz
      *
      */
-    private class CommandObject {
+    static class CommandObject {
         private String _command;
         private String _commandParameter;
         private int _commandParameterAsInteger;
 
-        private CommandObject(String commandMessage) {
+        CommandObject(String commandMessage) {
             boolean isSingleWord = (commandMessage.indexOf(' ') == -1);
             if (isSingleWord) {
                 _command = commandMessage;
@@ -67,19 +67,19 @@ public class TextBuddy {
             }
         }
 
-        private boolean hasParameters() {
+        boolean hasParameters() {
             return _commandParameter != null;
         }
 
-        private String getCommand() {
+        String getCommand() {
             return _command;
         }
 
-        private String getParameters() {
+        String getParameters() {
             return _commandParameter;
         }
 
-        private int getParameterAsInteger() {
+        int getParameterAsInteger() {
             return _commandParameterAsInteger;
         }
         
@@ -87,7 +87,7 @@ public class TextBuddy {
          * Tries to convert the parameter into an Integer
          * @return true if successful, else false;
          */
-        private boolean processParameterAsInteger() {
+        boolean processParameterAsInteger() {
             try {
                 _commandParameterAsInteger = Integer.parseInt(_commandParameter);
                 return true;
