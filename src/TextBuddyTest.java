@@ -138,10 +138,41 @@ public class TextBuddyTest {
         String[] testData = {"test", "test2"};
         String fileName = initializeDummyFile(testData);
         TextBuddy.CommandObject testCommmand1 = new TextBuddy.CommandObject("Display");
+        TextBuddy.CommandObject invalidClearCommand  = new TextBuddy.CommandObject("Display 5");
+        String invalidCommandOutput = "Invalid command parameter";
         
         TextBuddy textBuddy = new TextBuddy(fileName);
         
         assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.processDisplayCommand(testCommmand1));
+        assertEquals(invalidCommandOutput, textBuddy.processDisplayCommand(invalidClearCommand));
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void clearEntriesTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        String clearOutput = String.format("all content deleted from %1$s", fileName);
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertEquals(clearOutput, textBuddy.clearEntries());
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processClearCommandTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        String invalidCommandOutput = "Invalid command parameter";
+        TextBuddy.CommandObject validClearCommmand = new TextBuddy.CommandObject("Clear");
+        TextBuddy.CommandObject invalidClearCommand = new TextBuddy.CommandObject("Clear 3");
+        String clearOutput = String.format("all content deleted from %1$s", fileName);
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertEquals(clearOutput, textBuddy.processClearCommand(validClearCommmand));
+        assertEquals(invalidCommandOutput, textBuddy.processClearCommand(invalidClearCommand));
         
         deleteDummyFile(fileName);
     }

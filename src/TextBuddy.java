@@ -203,7 +203,7 @@ public class TextBuddy {
                 processDeleteCommand(cmd);
                 break;
             case COMMAND_CLEAR :
-                processClearCommand(cmd);
+                printMessage(processClearCommand(cmd));
                 break;
             case COMMAND_DISPLAY :
                 printMessage(processDisplayCommand(cmd));
@@ -221,11 +221,11 @@ public class TextBuddy {
         }
     }
 
-    private void processClearCommand(CommandObject cmd) {
+    String processClearCommand(CommandObject cmd) {
         if (cmd.hasParameters()) {
-            printMessage(INVALID_COMMAND_PARAMETER_MSG);
+            return INVALID_COMMAND_PARAMETER_MSG;
         } else {
-            clearEntries();
+            return clearEntries();
         }
     }
 
@@ -260,9 +260,9 @@ public class TextBuddy {
         }
     }
 
-    private void clearEntries() {
+    String clearEntries() {
         _dataLines.clear();
-        printMessage(String.format(CLEAR_ENTRIES_MSG, _fileName));
+        return String.format(CLEAR_ENTRIES_MSG, _fileName);
     }
 
     String displayEntries() {
