@@ -135,7 +135,7 @@ public class TextBuddy {
      * Terminates the program if there is an exception in the filestream
      * @return an array list of each line in the file
      */
-    private ArrayList<String> getDataFromFile() {
+    ArrayList<String> getDataFromFile() {
         ArrayList<String> dataLines = new ArrayList<String>();
         try {
             File file = new File(_fileName);

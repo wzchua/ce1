@@ -2,15 +2,18 @@
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintStream;
+import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class TextBuddyTest {
-    TextBuddy textBuddy = new TextBuddy("file.txt");
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     @Before
@@ -64,6 +67,49 @@ public class TextBuddyTest {
     public void arguementNotOneTest(){
         String[] args = {"0", "1" };
         assertFalse(TextBuddy.isOfOneArgument(args));
+    }
+    
+    @Test
+    public void fileReadTest(){
+        //create test file to read
+        String[] dataLines = { "First line", "Second line",
+                                "Third line" };
+        
+        Random rng = new Random();
+        String fileName ="test" + rng.nextInt() + ".txt";
+        File file;
+        try {
+            file = new File(fileName);
+            while(file.exists()){
+                fileName ="test" + rng.nextInt() + ".txt";
+                file = new File(fileName);
+            }
+            file.createNewFile();
+        
+            FileWriter fw = new FileWriter(fileName);
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            for (String line : dataLines) {
+                bw.write(line);
+                bw.newLine();
+            }
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertArrayEquals(dataLines, textBuddy.getDataFromFile().toArray());
+   
+        //cleaning the test file
+        try {
+            file = new File(fileName);
+            file.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
 }
