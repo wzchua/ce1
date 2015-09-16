@@ -187,9 +187,15 @@ public class TextBuddyTest {
         String[] testData = {"test", "test2"};
         String fileName = initializeDummyFile(testData);
         String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
+        String[] dataAfterDelete = {"test"};
+        String invalidIndexOutput = "Invalid index";
         
         TextBuddy textBuddy = new TextBuddy(fileName);
+        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
         assertEquals(deleteOutput, textBuddy.deleteEntry(1));
+        assertArrayEquals(dataAfterDelete, textBuddy.getDataLines().toArray());
+        
+        assertEquals(invalidIndexOutput, textBuddy.deleteEntry(10));
         
         deleteDummyFile(fileName);
     }
@@ -208,12 +214,50 @@ public class TextBuddyTest {
         TextBuddy textBuddy = new TextBuddy(fileName);
         String[] dataAfterDelete = {"test"};
         
-        assertArrayEquals(testData, textBuddy.getDatalines().toArray());
+        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
         assertEquals(deleteOutput, textBuddy.processDeleteCommand(validDeleteCommand));
-        assertArrayEquals(dataAfterDelete, textBuddy.getDatalines().toArray());
+        assertArrayEquals(dataAfterDelete, textBuddy.getDataLines().toArray());
         
         assertEquals(invalidCommandOutput, textBuddy.processDeleteCommand(invalidDeleteCommand1));
         assertEquals(invalidIndexOutput, textBuddy.processDeleteCommand(invalidDeleteCommand2));
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void addEntryTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        String addedLine = "test3";
+        String addOutput = String.format("added to %1$s: \"%2$s\"", fileName, addedLine);
+        String[] dataAfterAdd = {"test", "test2", addedLine};
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
+        assertEquals(addOutput, textBuddy.addEntry(addedLine));
+        assertArrayEquals(dataAfterAdd, textBuddy.getDataLines().toArray());
+        
+        deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processAddCommandTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        String addedLine = "test3";
+        String addOutput = String.format("added to %1$s: \"%2$s\"", fileName, addedLine);
+        TextBuddy.CommandObject validDeleteCommand = new TextBuddy.CommandObject("Add " + addedLine);
+        TextBuddy.CommandObject invalidDeleteCommand  = new TextBuddy.CommandObject("Add");
+        String invalidCommandOutput = "Invalid command parameter";
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        String[] dataAfterAdd = {"test", "test2", addedLine};
+        
+        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
+        assertEquals(addOutput, textBuddy.processAddCommand(validDeleteCommand));
+        assertArrayEquals(dataAfterAdd, textBuddy.getDataLines().toArray());
+        
+        assertEquals(invalidCommandOutput, textBuddy.processDeleteCommand(invalidDeleteCommand));
         
         deleteDummyFile(fileName);
     }

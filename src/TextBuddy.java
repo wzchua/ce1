@@ -188,7 +188,7 @@ public class TextBuddy {
         String input = _scanner.nextLine();
         return input;
     }
-    ArrayList<String> getDatalines(){
+    ArrayList<String> getDataLines(){
         return _dataLines;
     }
 
@@ -200,7 +200,7 @@ public class TextBuddy {
                 setupForExiting();
                 break;
             case COMMAND_ADD :
-                processAddCommand(cmd);
+                printMessage(processAddCommand(cmd));
                 break;
             case COMMAND_DELETE :
                 printMessage(processDeleteCommand(cmd));
@@ -241,17 +241,17 @@ public class TextBuddy {
         }
     }
 
-    private void processAddCommand(CommandObject cmd) {
+    String processAddCommand(CommandObject cmd) {
         if (cmd.hasParameters()) {
-            addEntry(cmd.getParameters());
+            return addEntry(cmd.getParameters());
         } else {
-            printMessage(INVALID_COMMAND_PARAMETER_MSG);
+            return INVALID_COMMAND_PARAMETER_MSG;
         }
     }
 
-    private void addEntry(String dataLine) {
+    String addEntry(String dataLine) {
         _dataLines.add(dataLine);
-        printMessage(String.format(ADD_ENTRY_MSG, _fileName, dataLine));
+        return String.format(ADD_ENTRY_MSG, _fileName, dataLine);
     }
 
     String deleteEntry(int lineIndex) {
