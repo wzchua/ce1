@@ -206,14 +206,14 @@ public class TextBuddy {
                 processClearCommand(cmd);
                 break;
             case COMMAND_DISPLAY :
-                processDisplayCommand(cmd);
+                printMessage(processDisplayCommand(cmd));
                 break;
             default :
                 printMessage(INVALID_COMMAND_MSG);
         }
     }
 
-    private String processDisplayCommand(CommandObject cmd) {
+    String processDisplayCommand(CommandObject cmd) {
         if (cmd.hasParameters()) {
             return INVALID_COMMAND_PARAMETER_MSG;            
         } else {
@@ -265,7 +265,7 @@ public class TextBuddy {
         printMessage(String.format(CLEAR_ENTRIES_MSG, _fileName));
     }
 
-    private String displayEntries() {
+    String displayEntries() {
         int length = _dataLines.size();
         String output;
         StringBuilder stringBuilder = new StringBuilder();

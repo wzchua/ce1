@@ -75,6 +75,15 @@ public class TextBuddyTest {
         String[] dataLines = { "First line", "Second line",
                                 "Third line" };
         
+       String fileName = initializeDummyFile(dataLines);
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertArrayEquals(dataLines, textBuddy.getDataFromFile().toArray());
+   
+       deleteDummyFile(fileName);
+    }
+
+    public String initializeDummyFile(String[] dataLines) {
         Random rng = new Random();
         String fileName ="test" + rng.nextInt() + ".txt";
         File file;
@@ -98,10 +107,11 @@ public class TextBuddyTest {
             e.printStackTrace();
             System.exit(1);
         }
-        
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertArrayEquals(dataLines, textBuddy.getDataFromFile().toArray());
-   
+        return fileName;
+    }
+    
+    public void deleteDummyFile(String fileName){
+        File file;
         //cleaning the test file
         try {
             file = new File(fileName);
@@ -111,5 +121,15 @@ public class TextBuddyTest {
             System.exit(1);
         }
     }
-
+    
+    @Test
+    public void displayEntriesTest(){
+        String[] testData = {"test", "test2"};
+        String fileName = initializeDummyFile(testData);
+        
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.displayEntries());
+        
+        deleteDummyFile(fileName);
+    }
 }
