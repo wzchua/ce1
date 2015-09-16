@@ -22,12 +22,24 @@ public class TextBuddyTest {
     public void cleanUpStreams() {
         System.setOut(null);
     }
+    
+    @Test
+    public void commandObjectNoParameterTest(){
+        String message = "Clear";
+        TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
+        assertEquals(message, cmdObj.getCommand());
+        assertFalse(cmdObj.hasParameters());
+        assertEquals(null, cmdObj.getParameters());
+        
+    }
+    
     @Test
     public void commandObjectAddTest(){
         String message = "Add ten pies";
         TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
         assertEquals("Add", cmdObj.getCommand());
-        assertEquals("ten pies", cmdObj.getParameters());        
+        assertEquals("ten pies", cmdObj.getParameters());
+        assertTrue(cmdObj.hasParameters());
     }
     
     @Test
