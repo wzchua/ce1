@@ -261,4 +261,16 @@ public class TextBuddyTest {
         
         deleteDummyFile(fileName);
     }
+    
+    @Test
+    public void sortEntriesTest(){
+        String[] testData = new String[0];
+        String fileName = initializeDummyFile(testData);
+        TextBuddy textBuddy = new TextBuddy(fileName);
+        ArrayList<String> entries = new ArrayList<String>();
+        
+        assertEquals(entries, textBuddy.sortEntries(entries));//empty arraylist
+    	
+        deleteDummyFile(fileName);
+    }
 }

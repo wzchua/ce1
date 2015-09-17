@@ -286,6 +286,14 @@ public class TextBuddy {
         }
         return output;
     }
+    ArrayList<String> sortEntries(ArrayList<String> entries){
+    	if(entries.size() == 0){
+    		return entries;
+    	} else {
+    		
+    	}
+    	return entries;
+    }
 
     private String formatDataLine(int index, String dataLine) {        
         String formatted = String.format(DATA_LINE_MSG, (index + 1), dataLine);
