@@ -281,4 +281,19 @@ public class TextBuddyTest {
     	
         deleteDummyFile(fileName);
     }
+    
+    @Test
+    public void processSortCommandTest(){
+    	String[] testData = new String[0];
+    	String fileName = initializeDummyFile(testData);
+    	TextBuddy textBuddy = new TextBuddy(fileName);
+        TextBuddy.CommandObject validSortCommand = new TextBuddy.CommandObject("Sort");
+        TextBuddy.CommandObject invalidSortCommand  = new TextBuddy.CommandObject("Sort 30");
+
+        String invalidCommandOutput = "Invalid command parameter";
+
+        assertEquals(invalidCommandOutput, textBuddy.processSortCommand(invalidSortCommand));
+    	
+        deleteDummyFile(fileName);
+    }
 }
