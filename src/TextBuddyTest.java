@@ -302,7 +302,7 @@ public class TextBuddyTest {
 
         assertEquals(invalidCommandOutput, textBuddy.processSortCommand(invalidSortCommand));
     	
-        assertEquals(sortEmptyOutput, textBuddy.sortEntries());//empty arraylist
+        assertEquals(sortEmptyOutput, textBuddy.processSortCommand(validSortCommand));//empty arraylist
         assertEquals(entries, textBuddy.getDataLines());
         
     	textBuddy.addEntry("apple");
@@ -310,7 +310,7 @@ public class TextBuddyTest {
     	textBuddy.addEntry("pool");
     	String[] sortedArray = {"apple", "pool", "zebra"};
     	Collections.addAll(sortedEntries, sortedArray);
-    	assertEquals(sortedOutput, textBuddy.sortEntries());
+    	assertEquals(sortedOutput, textBuddy.processSortCommand(validSortCommand));
         assertEquals(sortedEntries, textBuddy.getDataLines());
         
         deleteDummyFile(fileName);
