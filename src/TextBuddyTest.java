@@ -366,7 +366,20 @@ public class TextBuddyTest {
     	output = outContent.toString();
     	assertEquals(invalidOutput + System.lineSeparator(), output);
     	outContent.reset();
-    		
+    	
+        //intermediate
+        textBuddy.clearEntries();
+        textBuddy.addEntry("apple");
+        textBuddy.addEntry("zebra");
+        textBuddy.addEntry("pool");
+
+        //sort input
+        String[] sortedArray = { "apple", "pool", "zebra" };
+        textBuddy.processInput("Sort");
+        output = outContent.toString();
+        assertEquals(sortedOutput + System.lineSeparator(), output);
+        assertArrayEquals(sortedArray, textBuddy.getDataLines().toArray());
+        
     	deleteDummyFile(fileName);
     	
     }
