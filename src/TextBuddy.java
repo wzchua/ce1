@@ -63,9 +63,9 @@ public class TextBuddy {
         CommandObject(String commandMessage) {
             boolean isSingleWord = (commandMessage.indexOf(' ') == -1);
             if (isSingleWord) {
-                _command = commandMessage;
+                _command = commandMessage.toLowerCase();
             } else {
-                _command = commandMessage.substring(0, commandMessage.indexOf(' '));
+                _command = commandMessage.substring(0, commandMessage.indexOf(' ')).toLowerCase();
                 _commandParameter = commandMessage.substring(commandMessage.indexOf(' ') + 1);
             }
         }
@@ -195,7 +195,7 @@ public class TextBuddy {
         return _dataLines;
     }
 
-    private void processInput(String input) {
+    void processInput(String input) {
         CommandObject cmd = new CommandObject(input);
         
         switch (cmd.getCommand()) {

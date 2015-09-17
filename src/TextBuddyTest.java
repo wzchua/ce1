@@ -71,7 +71,7 @@ public class TextBuddyTest {
     public void commandObjectNoParameterTest(){
         String message = "Clear";
         TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
-        assertEquals(message, cmdObj.getCommand());
+        assertEquals(message.toLowerCase(), cmdObj.getCommand());
         assertFalse(cmdObj.hasParameters());
         assertEquals(null, cmdObj.getParameters());
     }
@@ -80,7 +80,7 @@ public class TextBuddyTest {
     public void commandObjectWithStringParameter(){
         String message = "Add ten pies";
         TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
-        assertEquals("Add", cmdObj.getCommand());
+        assertEquals("add", cmdObj.getCommand());
         assertTrue(cmdObj.hasParameters());
         assertEquals("ten pies", cmdObj.getParameters());
         assertFalse(cmdObj.processParameterAsInteger());
@@ -90,7 +90,7 @@ public class TextBuddyTest {
     public void commandObjectWithIntegerParameter(){
         String message = "Delete 1000";
         TextBuddy.CommandObject cmdObj = new TextBuddy.CommandObject(message);
-        assertEquals("Delete", cmdObj.getCommand());
+        assertEquals("delete", cmdObj.getCommand());
         assertTrue(cmdObj.hasParameters());
         assertEquals("1000", cmdObj.getParameters());
         assertTrue(cmdObj.processParameterAsInteger());
@@ -314,5 +314,60 @@ public class TextBuddyTest {
         assertEquals(sortedEntries, textBuddy.getDataLines());
         
         deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processInputTest(){
+    	String[] testData = new String[0];
+    	String fileName = initializeDummyFile(testData);
+    	TextBuddy textBuddy = new TextBuddy(fileName);
+    	String output;
+    	String addOutput = String.format("added to %1$s: \"%2$s\"", fileName, "five");
+        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
+        String clearOutput = String.format("all content deleted from %1$s", fileName);
+        String invalidOutput = "Invalid command";
+        String sortedOutput = String.format("%s sorted", fileName);
+        
+    	//add input
+    	textBuddy.processInput("Add five");
+    	output = outContent.toString();
+    	assertEquals(addOutput + System.lineSeparator(), output);
+    	outContent.reset();
+    	
+    	//intermediate
+    	textBuddy.addEntry("test1");
+    	textBuddy.addEntry("test2");
+    	
+    	//delete input
+    	textBuddy.processInput("Delete 3");
+    	output = outContent.toString();
+    	assertEquals(deleteOutput + System.lineSeparator(), output);
+    	outContent.reset();
+    	
+    	//clear input
+    	textBuddy.processInput("Clear");
+    	output = outContent.toString();
+    	assertEquals(clearOutput + System.lineSeparator(), output);
+    	outContent.reset();
+    	
+    	//intermediate
+    	textBuddy.addEntry("test1");
+    	textBuddy.addEntry("test2");
+    	
+    	//display input
+    	textBuddy.processInput("Display");
+    	output = outContent.toString();
+    	assertEquals("1. test1" +System.lineSeparator() + 
+    					"2. test2" + System.lineSeparator(), output);
+    	outContent.reset();
+    	
+    	//invalid input
+    	textBuddy.processInput("invalid");
+    	output = outContent.toString();
+    	assertEquals(invalidOutput + System.lineSeparator(), output);
+    	outContent.reset();
+    		
+    	deleteDummyFile(fileName);
+    	
     }
 }
