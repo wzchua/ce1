@@ -270,14 +270,19 @@ public class TextBuddyTest {
         TextBuddy textBuddy = new TextBuddy(fileName);
         ArrayList<String> entries = new ArrayList<String>();
         ArrayList<String> sortedEntries = new ArrayList<String>();
+        String sortEmptyOutput = String.format("%s is empty, nothing to sort", fileName);
+        String sortedOutput = String.format("%s sorted", fileName);
         
-        assertEquals(entries, textBuddy.sortEntries(entries));//empty arraylist
-    	entries.add("apple");
-    	entries.add("zebra");
-    	entries.add("pool");
+        assertEquals(sortEmptyOutput, textBuddy.sortEntries());//empty arraylist
+        assertEquals(entries, textBuddy.getDataLines());
+        
+    	textBuddy.addEntry("apple");
+    	textBuddy.addEntry("zebra");
+    	textBuddy.addEntry("pool");
     	String[] sortedArray = {"apple", "pool", "zebra"};
     	Collections.addAll(sortedEntries, sortedArray);
-    	assertEquals(sortedEntries, textBuddy.sortEntries(entries));
+    	assertEquals(sortedOutput, textBuddy.sortEntries());
+        assertEquals(sortedEntries, textBuddy.getDataLines());
     	
         deleteDummyFile(fileName);
     }
