@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import org.junit.After;
@@ -268,8 +269,15 @@ public class TextBuddyTest {
         String fileName = initializeDummyFile(testData);
         TextBuddy textBuddy = new TextBuddy(fileName);
         ArrayList<String> entries = new ArrayList<String>();
+        ArrayList<String> sortedEntries = new ArrayList<String>();
         
         assertEquals(entries, textBuddy.sortEntries(entries));//empty arraylist
+    	entries.add("apple");
+    	entries.add("zebra");
+    	entries.add("pool");
+    	String[] sortedArray = {"apple", "pool", "zebra"};
+    	Collections.addAll(sortedEntries, sortedArray);
+    	assertEquals(sortedEntries, textBuddy.sortEntries(entries));
     	
         deleteDummyFile(fileName);
     }

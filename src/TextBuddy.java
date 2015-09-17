@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -290,7 +291,7 @@ public class TextBuddy {
     	if(entries.size() == 0){
     		return entries;
     	} else {
-    		
+    		Collections.sort(entries);
     	}
     	return entries;
     }
