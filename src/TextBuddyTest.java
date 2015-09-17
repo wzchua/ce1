@@ -294,11 +294,25 @@ public class TextBuddyTest {
     	TextBuddy textBuddy = new TextBuddy(fileName);
         TextBuddy.CommandObject validSortCommand = new TextBuddy.CommandObject("Sort");
         TextBuddy.CommandObject invalidSortCommand  = new TextBuddy.CommandObject("Sort 30");
-
+        ArrayList<String> entries = new ArrayList<String>();
+        ArrayList<String> sortedEntries = new ArrayList<String>();
+        String sortEmptyOutput = String.format("%s is empty, nothing to sort", fileName);
+        String sortedOutput = String.format("%s sorted", fileName);
         String invalidCommandOutput = "Invalid command parameter";
 
         assertEquals(invalidCommandOutput, textBuddy.processSortCommand(invalidSortCommand));
     	
+        assertEquals(sortEmptyOutput, textBuddy.sortEntries());//empty arraylist
+        assertEquals(entries, textBuddy.getDataLines());
+        
+    	textBuddy.addEntry("apple");
+    	textBuddy.addEntry("zebra");
+    	textBuddy.addEntry("pool");
+    	String[] sortedArray = {"apple", "pool", "zebra"};
+    	Collections.addAll(sortedEntries, sortedArray);
+    	assertEquals(sortedOutput, textBuddy.sortEntries());
+        assertEquals(sortedEntries, textBuddy.getDataLines());
+        
         deleteDummyFile(fileName);
     }
 }
