@@ -20,7 +20,6 @@ import java.util.Scanner;
  *
  */
 public class TextBuddy {
-    private static final String COMMAND_SEARCH = "search";
     private static final String SEARCH_FAIL_MSG = "%s not found";
 	private static final String SORTED_MSG = "%s sorted";
 	private static final String NO_ENTRIES_TO_SORT_MSG = "%s is empty, nothing to sort";
@@ -43,6 +42,7 @@ public class TextBuddy {
     private static final String COMMAND_CLEAR = "clear";
     private static final String COMMAND_DISPLAY = "display";
     private static final String COMMAND_SORT = "sort";
+    private static final String COMMAND_SEARCH = "search";
 
     private final String WELCOME_MSG;
     
@@ -104,19 +104,43 @@ public class TextBuddy {
     }
     
     /**
-     * Creates a new TextBuddy instance that stores the fileName, loads the file data, 
+     * Creates a new TextBuddy instance that stores the fileName, 
      * initializes scanner and formats the welcome message
      * 
      * @param fileName - string of the file where data would be stored into
      */
     public TextBuddy(String fileName) {
         _fileName = fileName;
-        _dataLines = getDataFromFile();
         _scanner = new Scanner(System.in);
-        WELCOME_MSG = String.format(PRE_FORMATTED_WELCOME_MSG, _fileName);        
+        WELCOME_MSG = String.format(PRE_FORMATTED_WELCOME_MSG, _fileName);
+    }    
+    
+    public void loadData(){
+        _dataLines = getDataFromFile();        
+    }
+    
+    public void setDataLines(ArrayList<String> data){
+        if(_dataLines == null){
+            _dataLines = new ArrayList<String>();
+        }
+        _dataLines.clear();
+        for(String line : data){
+            _dataLines.add(line);
+        }
+    }
+    
+    public void setDataLines(String[] data){
+        if(_dataLines == null){
+            _dataLines = new ArrayList<String>();
+        }
+        _dataLines.clear();
+        for(String line : data){
+            _dataLines.add(line);
+        }
     }
 
     public void start() {
+        loadData();
         printMessage(WELCOME_MSG);
         runCoreProcess();
     }
@@ -312,6 +336,7 @@ public class TextBuddy {
         }
         return output;
     }
+    
     String sortEntries(){
     	if(_dataLines.size() == 0){
     		return String.format(NO_ENTRIES_TO_SORT_MSG, _fileName);
@@ -320,6 +345,7 @@ public class TextBuddy {
         	return String.format(SORTED_MSG, _fileName);
     	}
     }
+    
     String searchEntries(String keyword){
     	String printOutput;
     	ArrayList<String> searchResult = new ArrayList<String>();

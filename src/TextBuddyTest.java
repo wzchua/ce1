@@ -17,6 +17,8 @@ import org.junit.Test;
 
 public class TextBuddyTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    String[] testData1 = { "First line", "Second line", "Third line" };
+    String testFileName = "test.txt";
     
     @Before
     public void setUpStreams() {
@@ -112,229 +114,240 @@ public class TextBuddyTest {
     
     @Test
     public void fileReadTest(){
-        //create test file to read
-        String[] dataLines = { "First line", "Second line",
-                                "Third line" };
-        
-       String fileName = initializeDummyFile(dataLines);
-        
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertArrayEquals(dataLines, textBuddy.getDataFromFile().toArray());
+        //create a dummy file to read
+       String fileName = initializeDummyFile(testData1);
+               
+       TextBuddy textBuddy = new TextBuddy(fileName);
+       textBuddy.loadData();
+       
+       assertArrayEquals(testData1, textBuddy.getDataFromFile().toArray());
    
        deleteDummyFile(fileName);
     }
     
     @Test
     public void clearEntriesTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        String clearOutput = String.format("all content deleted from %1$s", fileName);
+        String clearOutput = String.format("all content deleted from %1$s", testFileName);
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertEquals(clearOutput, textBuddy.clearEntries());
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
         
-        deleteDummyFile(fileName);
+        assertEquals(clearOutput, textBuddy.clearEntries());        
     }
     
     @Test
     public void processClearCommandTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
         String invalidCommandOutput = "Invalid command parameter";
+        String clearOutput = String.format("all content deleted from %1$s", testFileName);
+        
         TextBuddy.CommandObject validClearCommmand = new TextBuddy.CommandObject("Clear");
         TextBuddy.CommandObject invalidClearCommand = new TextBuddy.CommandObject("Clear 3");
-        String clearOutput = String.format("all content deleted from %1$s", fileName);
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
+        
         assertEquals(clearOutput, textBuddy.processClearCommand(validClearCommmand));
-        assertEquals(invalidCommandOutput, textBuddy.processClearCommand(invalidClearCommand));
         
-        deleteDummyFile(fileName);
+        assertEquals(invalidCommandOutput, textBuddy.processClearCommand(invalidClearCommand));
     }
     
     @Test
     public void displayEntriesTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
+        String displayOutput = "1. " + testData1[0] + System.lineSeparator() + "2. " 
+                                + testData1[1] + System.lineSeparator() + "3. " + testData1[2];
+        String displayEmptyOutput = testFileName + " is empty";
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.displayEntries());
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
+        
+        assertEquals(displayOutput, textBuddy.displayEntries());
+        
         textBuddy.clearEntries();
-        assertEquals(fileName + " is empty", textBuddy.displayEntries());
-        
-        deleteDummyFile(fileName);
+        assertEquals(displayEmptyOutput, textBuddy.displayEntries());        
     }
     
     @Test
     public void processDisplayCommandTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
+        String invalidCommandOutput = "Invalid command parameter";
+        String displayOutput = "1. " + testData1[0] + System.lineSeparator() + "2. " 
+                + testData1[1] + System.lineSeparator() + "3. " + testData1[2];
+        String displayEmptyOutput = testFileName + " is empty";
+        
         TextBuddy.CommandObject validDisplayCommand = new TextBuddy.CommandObject("Display");
         TextBuddy.CommandObject invalidDisplayCommand  = new TextBuddy.CommandObject("Display 5");
-        String invalidCommandOutput = "Invalid command parameter";
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
         
-        assertEquals("1. test" +System.lineSeparator() + "2. test2", textBuddy.processDisplayCommand(validDisplayCommand));
+        assertEquals(displayOutput, textBuddy.processDisplayCommand(validDisplayCommand));
+        
         assertEquals(invalidCommandOutput, textBuddy.processDisplayCommand(invalidDisplayCommand));
-        textBuddy.clearEntries();
-        assertEquals(fileName + " is empty", textBuddy.processDisplayCommand(validDisplayCommand));
         
-        deleteDummyFile(fileName);
+        textBuddy.clearEntries();
+        assertEquals(displayEmptyOutput, textBuddy.processDisplayCommand(validDisplayCommand));        
     }
     
     @Test
     public void deleteEntryTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
-        String[] dataAfterDelete = {"test"};
+        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", testFileName, "Second line");
         String invalidIndexOutput = "Invalid index";
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
+        String[] dataAfterDelete = { "First line", "Third line" };
+        
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
+        
+        assertArrayEquals(testData1, textBuddy.getDataLines().toArray());
         assertEquals(deleteOutput, textBuddy.deleteEntry(1));
-        assertArrayEquals(dataAfterDelete, textBuddy.getDataLines().toArray());
+        assertArrayEquals(dataAfterDelete, textBuddy.getDataLines().toArray());   
         
         assertEquals(invalidIndexOutput, textBuddy.deleteEntry(10));
-        
-        deleteDummyFile(fileName);
     }
     
     @Test
     public void processDeleteCommandTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
+        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", testFileName, "Second line");
+        String invalidIndexOutput = "Invalid index";
+        String invalidCommandOutput = "Invalid command parameter";
+        
+        String[] dataAfterDelete = { "First line", "Third line" };
+        
         TextBuddy.CommandObject validDeleteCommand = new TextBuddy.CommandObject("Delete 2");
         TextBuddy.CommandObject invalidDeleteCommand1  = new TextBuddy.CommandObject("Delete");
         TextBuddy.CommandObject invalidDeleteCommand2  = new TextBuddy.CommandObject("Delete 10");
-        String invalidCommandOutput = "Invalid command parameter";
-        String invalidIndexOutput = "Invalid index";
+
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        String[] dataAfterDelete = {"test"};
-        
-        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
+        assertArrayEquals(testData1, textBuddy.getDataLines().toArray());
         assertEquals(deleteOutput, textBuddy.processDeleteCommand(validDeleteCommand));
         assertArrayEquals(dataAfterDelete, textBuddy.getDataLines().toArray());
         
         assertEquals(invalidCommandOutput, textBuddy.processDeleteCommand(invalidDeleteCommand1));
-        assertEquals(invalidIndexOutput, textBuddy.processDeleteCommand(invalidDeleteCommand2));
         
-        deleteDummyFile(fileName);
+        assertEquals(invalidIndexOutput, textBuddy.processDeleteCommand(invalidDeleteCommand2));        
     }
     
     @Test
     public void addEntryTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        String addedLine = "test3";
-        String addOutput = String.format("added to %1$s: \"%2$s\"", fileName, addedLine);
-        String[] dataAfterAdd = {"test", "test2", addedLine};
+        String addedLine = "fourth line";
+        String addOutput = String.format("added to %1$s: \"%2$s\"", testFileName, addedLine);
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
+        String[] dataAfterAdd = {testData1[0], testData1[1], testData1[2], addedLine};
+
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
+        
+        assertArrayEquals(testData1, textBuddy.getDataLines().toArray());
         assertEquals(addOutput, textBuddy.addEntry(addedLine));
         assertArrayEquals(dataAfterAdd, textBuddy.getDataLines().toArray());
-        
-        deleteDummyFile(fileName);
     }
     
     @Test
     public void processAddCommandTest(){
-        String[] testData = {"test", "test2"};
-        String fileName = initializeDummyFile(testData);
-        String addedLine = "test3";
-        String addOutput = String.format("added to %1$s: \"%2$s\"", fileName, addedLine);
-        TextBuddy.CommandObject validDeleteCommand = new TextBuddy.CommandObject("Add " + addedLine);
-        TextBuddy.CommandObject invalidDeleteCommand  = new TextBuddy.CommandObject("Add");
+        String addedLine = "fourth line";
+        String addOutput = String.format("added to %1$s: \"%2$s\"", testFileName, addedLine);
         String invalidCommandOutput = "Invalid command parameter";
         
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        String[] dataAfterAdd = {"test", "test2", addedLine};
+        String[] dataAfterAdd = {testData1[0], testData1[1], testData1[2], addedLine};
         
-        assertArrayEquals(testData, textBuddy.getDataLines().toArray());
+        TextBuddy.CommandObject validDeleteCommand = new TextBuddy.CommandObject("Add " + addedLine);
+        TextBuddy.CommandObject invalidDeleteCommand  = new TextBuddy.CommandObject("Add");
+        
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData1);
+        
+        assertArrayEquals(testData1, textBuddy.getDataLines().toArray());
         assertEquals(addOutput, textBuddy.processAddCommand(validDeleteCommand));
         assertArrayEquals(dataAfterAdd, textBuddy.getDataLines().toArray());
         
         assertEquals(invalidCommandOutput, textBuddy.processDeleteCommand(invalidDeleteCommand));
-        
-        deleteDummyFile(fileName);
-    }
-    
-    @Test
-    public void sortEntriesTest(){
-        String[] testData = new String[0];
-        String fileName = initializeDummyFile(testData);
-        TextBuddy textBuddy = new TextBuddy(fileName);
-        ArrayList<String> entries = new ArrayList<String>();
-        ArrayList<String> sortedEntries = new ArrayList<String>();
-        String sortEmptyOutput = String.format("%s is empty, nothing to sort", fileName);
-        String sortedOutput = String.format("%s sorted", fileName);
-        
-        assertEquals(sortEmptyOutput, textBuddy.sortEntries());//empty arraylist
-        assertEquals(entries, textBuddy.getDataLines());
-        
-    	textBuddy.addEntry("apple");
-    	textBuddy.addEntry("zebra");
-    	textBuddy.addEntry("pool");
-    	String[] sortedArray = {"apple", "pool", "zebra"};
-    	Collections.addAll(sortedEntries, sortedArray);
-    	assertEquals(sortedOutput, textBuddy.sortEntries());
-        assertEquals(sortedEntries, textBuddy.getDataLines());
-    	
-        deleteDummyFile(fileName);
     }
     
     @Test
     public void searchEntriesTest(){
     	String[] testData = { "fox on a field", "people riding horses on a field", "apples" , "green apples" };
-    	String fileName = initializeDummyFile(testData);
-    	TextBuddy textBuddy = new TextBuddy(fileName);
+    	
     	String expectedOutput = "word: \"field\" found in 2 entires" + System.lineSeparator() 
     							+ "1. " + testData[0] + System.lineSeparator() 
     							+"2. " + testData[1];
-    	String output = textBuddy.searchEntries("field");
-    	assertEquals(expectedOutput, output);
-    	output = textBuddy.searchEntries("apple");
-    	assertEquals("apple not found", output);
+    	String output;
     	
-    	deleteDummyFile(fileName);
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData);        
+        
+        output = textBuddy.searchEntries("field");
+    	assertEquals(expectedOutput, output);
+    	
+    	output = textBuddy.searchEntries("apple");
+    	assertEquals("apple not found", output);    	
     }
     
     @Test
     public void processSearchCommandTest(){
     	String[] testData = { "fox on a field", "people riding horses on a field", "apples" , "green apples" };
-    	String fileName = initializeDummyFile(testData);
-    	TextBuddy textBuddy = new TextBuddy(fileName);
+    	
     	String expectedOutput = "word: \"field\" found in 2 entires" + System.lineSeparator() 
     							+ "1. " + testData[0] + System.lineSeparator() 
     							+"2. " + testData[1];
+        String invalidCommandOutput = "Invalid command parameter";
+        String output;
+        
         TextBuddy.CommandObject validSearchCommand = new TextBuddy.CommandObject("Search field");
         TextBuddy.CommandObject invalidSearchCommand  = new TextBuddy.CommandObject("Search");
-        
+
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(testData);        
     	
-    	String output = textBuddy.processSearchCommand(validSearchCommand);
-    	assertEquals(expectedOutput, output);
+    	output = textBuddy.processSearchCommand(validSearchCommand);
+    	assertEquals(expectedOutput, output);    
     	
-    	deleteDummyFile(fileName);
+    	output = textBuddy.processSearchCommand(invalidSearchCommand);
+        assertEquals(invalidCommandOutput, output);  
     	
     }
     
     @Test
-    public void processSortCommandTest(){
-    	String[] testData = new String[0];
-    	String fileName = initializeDummyFile(testData);
-    	TextBuddy textBuddy = new TextBuddy(fileName);
-        TextBuddy.CommandObject validSortCommand = new TextBuddy.CommandObject("Sort");
-        TextBuddy.CommandObject invalidSortCommand  = new TextBuddy.CommandObject("Sort 30");
+    public void sortEntriesTest(){        
         ArrayList<String> entries = new ArrayList<String>();
         ArrayList<String> sortedEntries = new ArrayList<String>();
-        String sortEmptyOutput = String.format("%s is empty, nothing to sort", fileName);
-        String sortedOutput = String.format("%s sorted", fileName);
-        String invalidCommandOutput = "Invalid command parameter";
+        String[] sortedArray = {"apple", "pool", "zebra"};
+        
+        String sortEmptyOutput = String.format("%s is empty, nothing to sort", testFileName);
+        String sortedOutput = String.format("%s sorted", testFileName);        
 
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(entries);        
+        
+        assertEquals(sortEmptyOutput, textBuddy.sortEntries());//empty arraylist
+        assertEquals(entries, textBuddy.getDataLines());
+        
+        textBuddy.addEntry("apple");
+        textBuddy.addEntry("zebra");
+        textBuddy.addEntry("pool");
+        
+        Collections.addAll(sortedEntries, sortedArray);
+        
+        assertEquals(sortedOutput, textBuddy.sortEntries());
+        assertEquals(sortedEntries, textBuddy.getDataLines());
+    }
+    
+    @Test
+    public void processSortCommandTest(){
+        ArrayList<String> entries = new ArrayList<String>();
+        ArrayList<String> sortedEntries = new ArrayList<String>();
+        String[] sortedArray = {"apple", "pool", "zebra"};
+        
+        String sortEmptyOutput = String.format("%s is empty, nothing to sort", testFileName);
+        String sortedOutput = String.format("%s sorted", testFileName);
+        String invalidCommandOutput = "Invalid command parameter";        
+        
+        TextBuddy.CommandObject validSortCommand = new TextBuddy.CommandObject("Sort");
+        TextBuddy.CommandObject invalidSortCommand  = new TextBuddy.CommandObject("Sort 30");
+
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(entries);        
+        
         assertEquals(invalidCommandOutput, textBuddy.processSortCommand(invalidSortCommand));
     	
         assertEquals(sortEmptyOutput, textBuddy.processSortCommand(validSortCommand));//empty arraylist
@@ -343,26 +356,31 @@ public class TextBuddyTest {
     	textBuddy.addEntry("apple");
     	textBuddy.addEntry("zebra");
     	textBuddy.addEntry("pool");
-    	String[] sortedArray = {"apple", "pool", "zebra"};
+    	
     	Collections.addAll(sortedEntries, sortedArray);
+    	
     	assertEquals(sortedOutput, textBuddy.processSortCommand(validSortCommand));
         assertEquals(sortedEntries, textBuddy.getDataLines());
-        
-        deleteDummyFile(fileName);
     }
     
     
     @Test
     public void processInputTest(){
-    	String[] testData = new String[0];
-    	String fileName = initializeDummyFile(testData);
-    	TextBuddy textBuddy = new TextBuddy(fileName);
+        ArrayList<String> entries = new ArrayList<String>();
+        String[] searchingTestData = { "fox on a field", "people riding horses on a field", "apples" , "green apples" };
+        
     	String output;
-    	String addOutput = String.format("added to %1$s: \"%2$s\"", fileName, "five");
-        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", fileName, "test2");
-        String clearOutput = String.format("all content deleted from %1$s", fileName);
+    	String addOutput = String.format("added to %1$s: \"%2$s\"", testFileName, "five");
+        String deleteOutput = String.format("deleted from %1$s: \"%2$s\"", testFileName, "test2");
+        String clearOutput = String.format("all content deleted from %1$s", testFileName);
+        String sortedOutput = String.format("%s sorted", testFileName);        
+        String searchedOutput = "word: \"field\" found in 2 entires" + System.lineSeparator() 
+                                + "1. " + searchingTestData[0] + System.lineSeparator() 
+                                +"2. " + searchingTestData[1];
         String invalidOutput = "Invalid command";
-        String sortedOutput = String.format("%s sorted", fileName);
+
+        TextBuddy textBuddy = new TextBuddy(testFileName);
+        textBuddy.setDataLines(entries);        
         
     	//add input
     	textBuddy.processInput("Add five");
@@ -415,25 +433,13 @@ public class TextBuddyTest {
         output = outContent.toString();
         assertEquals(sortedOutput + System.lineSeparator(), output);
         assertArrayEquals(sortedArray, textBuddy.getDataLines().toArray());
-        outContent.reset();
+        outContent.reset();  
         
-
-        //intermediate
-        textBuddy.clearEntries();
-        textBuddy.addEntry("fox on a field");
-        textBuddy.addEntry("people riding horses on a field");
-        textBuddy.addEntry("apples");
-        textBuddy.addEntry("green apples");
-        String searchOutput = "word: \"apples\" found in 2 entires" + System.lineSeparator() 
-                                + "1. apples" + System.lineSeparator() 
-                                +"2. green apples" + System.lineSeparator() ;
-        
-        //sort input
-        textBuddy.processInput("Search apples");
+        //search input
+        textBuddy.setDataLines(searchingTestData);
+        textBuddy.processInput("Search field");
         output = outContent.toString();
-        assertEquals(searchOutput, output);
-        
-    	deleteDummyFile(fileName);
+        assertEquals(searchedOutput + System.lineSeparator(), output);
     	
     }
 }
