@@ -20,6 +20,7 @@ import java.util.Scanner;
  *
  */
 public class TextBuddy {
+    private static final String COMMAND_SEARCH = "search";
     private static final String SEARCH_FAIL_MSG = "%s not found";
 	private static final String SORTED_MSG = "%s sorted";
 	private static final String NO_ENTRIES_TO_SORT_MSG = "%s is empty, nothing to sort";
@@ -218,6 +219,9 @@ public class TextBuddy {
                 break;
             case COMMAND_SORT:
             	printMessage(processSortCommand(cmd));
+            break;
+            case COMMAND_SEARCH:
+                printMessage(processSearchCommand(cmd));
             break;
             default :
                 printMessage(INVALID_COMMAND_MSG);

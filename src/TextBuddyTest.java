@@ -415,6 +415,23 @@ public class TextBuddyTest {
         output = outContent.toString();
         assertEquals(sortedOutput + System.lineSeparator(), output);
         assertArrayEquals(sortedArray, textBuddy.getDataLines().toArray());
+        outContent.reset();
+        
+
+        //intermediate
+        textBuddy.clearEntries();
+        textBuddy.addEntry("fox on a field");
+        textBuddy.addEntry("people riding horses on a field");
+        textBuddy.addEntry("apples");
+        textBuddy.addEntry("green apples");
+        String searchOutput = "word: \"apples\" found in 2 entires" + System.lineSeparator() 
+                                + "1. apples" + System.lineSeparator() 
+                                +"2. green apples" + System.lineSeparator() ;
+        
+        //sort input
+        textBuddy.processInput("Search apples");
+        output = outContent.toString();
+        assertEquals(searchOutput, output);
         
     	deleteDummyFile(fileName);
     	
