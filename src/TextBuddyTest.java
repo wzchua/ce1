@@ -288,6 +288,41 @@ public class TextBuddyTest {
     }
     
     @Test
+    public void searchEntriesTest(){
+    	String[] testData = { "fox on a field", "people riding horses on a field", "apples" , "green apples" };
+    	String fileName = initializeDummyFile(testData);
+    	TextBuddy textBuddy = new TextBuddy(fileName);
+    	String expectedOutput = "word: \"field\" found in 2 entires" + System.lineSeparator() 
+    							+ "1. " + testData[0] + System.lineSeparator() 
+    							+"2. " + testData[1];
+    	String output = textBuddy.searchEntries("field");
+    	assertEquals(expectedOutput, output);
+    	output = textBuddy.searchEntries("apple");
+    	assertEquals("apple not found", output);
+    	
+    	deleteDummyFile(fileName);
+    }
+    
+    @Test
+    public void processSearchCommandTest(){
+    	String[] testData = { "fox on a field", "people riding horses on a field", "apples" , "green apples" };
+    	String fileName = initializeDummyFile(testData);
+    	TextBuddy textBuddy = new TextBuddy(fileName);
+    	String expectedOutput = "word: \"field\" found in 2 entires" + System.lineSeparator() 
+    							+ "1. " + testData[0] + System.lineSeparator() 
+    							+"2. " + testData[1];
+        TextBuddy.CommandObject validSearchCommand = new TextBuddy.CommandObject("Search field");
+        TextBuddy.CommandObject invalidSearchCommand  = new TextBuddy.CommandObject("Search");
+        
+    	
+    	String output = textBuddy.processSearchCommand(validSearchCommand);
+    	assertEquals(expectedOutput, output);
+    	
+    	deleteDummyFile(fileName);
+    	
+    }
+    
+    @Test
     public void processSortCommandTest(){
     	String[] testData = new String[0];
     	String fileName = initializeDummyFile(testData);
@@ -315,6 +350,7 @@ public class TextBuddyTest {
         
         deleteDummyFile(fileName);
     }
+    
     
     @Test
     public void processInputTest(){

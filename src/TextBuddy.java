@@ -20,7 +20,8 @@ import java.util.Scanner;
  *
  */
 public class TextBuddy {
-    private static final String SORTED_MSG = "%s sorted";
+    private static final String SEARCH_FAIL_MSG = "%s not found";
+	private static final String SORTED_MSG = "%s sorted";
 	private static final String NO_ENTRIES_TO_SORT_MSG = "%s is empty, nothing to sort";
 	private static final String PRE_FORMATTED_WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";
     private static final String DATA_LINE_MSG = "%1$s. %2$s";
@@ -262,6 +263,13 @@ public class TextBuddy {
     		return sortEntries();
     	}
     }
+    String processSearchCommand(CommandObject cmd){
+    	if(cmd.hasParameters()){
+    		return searchEntries(cmd.getParameters());
+    	} else {
+        	return INVALID_COMMAND_PARAMETER_MSG;
+    	}
+    }
 
     String addEntry(String dataLine) {
         _dataLines.add(dataLine);
@@ -307,6 +315,34 @@ public class TextBuddy {
     		Collections.sort(_dataLines);
         	return String.format(SORTED_MSG, _fileName);
     	}
+    }
+    String searchEntries(String keyword){
+    	String printOutput;
+    	ArrayList<String> searchResult = new ArrayList<String>();
+    	for(int i = 0; i < _dataLines.size(); i++){
+    		String line = _dataLines.get(i);
+    		if(line.matches(".*\\b" + keyword + "\\b.*")){
+    			searchResult.add(line);
+    		}
+    	}
+    	if(searchResult.size() == 0){
+    		printOutput = String.format(SEARCH_FAIL_MSG, keyword);
+    	} else {
+    		StringBuilder stringBuilder = new StringBuilder();
+    		stringBuilder.append(String.format("word: \"%s\" found in %s entires", keyword, searchResult.size()));
+    		stringBuilder.append(System.lineSeparator());
+    		for(int i = 0; i < searchResult.size(); i++){
+    			String resultLine = formatDataLine(i, searchResult.get(i));
+    			stringBuilder.append(resultLine);
+
+                if(i != searchResult.size() - 1){
+                    stringBuilder.append(System.lineSeparator());
+                }
+    		}
+    		printOutput = stringBuilder.toString();
+    	}
+    	
+    	return printOutput;
     }
 
     private String formatDataLine(int index, String dataLine) {        
